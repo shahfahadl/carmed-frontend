@@ -209,7 +209,7 @@ export default function Login() {
                 hint={errors?.name?.message}
                 label={"Email"}
                 name="email"
-                width={"15vw"}
+                style={{width: '220px'}}
                 placeholder={"John Doe"}
               />
               <PasswordFormField

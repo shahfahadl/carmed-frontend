@@ -131,7 +131,7 @@ const Schema = yup.object().shape({
   name: yup
     .string("Name is required")
     .required("name is required")
-    .matches(/^[A-Za-z]+$/, "Name must contain alphabets only")
+    .matches(/^[a-zA-Z\s]+$/, "Name must contain alphabets only")
     .max(50),
   cnic: yup
     .string()
@@ -141,6 +141,15 @@ const Schema = yup.object().shape({
     .test(
       "is-number",
       "CNIC must be a valid 13-digit number",
+      (value) => !isNaN(Number(value))
+    ),
+  contact: yup
+    .string()
+    .typeError("CNIC must be valid")
+    .required("CNIC is required")
+    .test(
+      "is-number",
+      "Phone Number must be a number",
       (value) => !isNaN(Number(value))
     ),
   email: yup
@@ -294,6 +303,15 @@ export default function SignUp() {
                   label={"CNIC"}
                   name="cnic"
                   placeholder={"CNIC: ----- / ------- / -"}
+                />
+              </Password>
+              <Password className="pt-2">
+                <InputFormField
+                  control={control}
+                  hint={errors?.contact?.message}
+                  label={"Phone Number"}
+                  name="contact"
+                  placeholder={"03XX XXXXXXX"}
                 />
               </Password>
             </EmailPassword>

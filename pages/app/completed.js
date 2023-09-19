@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { Loading, Modal, Text } from "@nextui-org/react";
 import { RatingStar, SimpleInput } from '@elements/input'
 import { CommonUtility } from '@utility/common';
+import { skillsMap } from '@utility/constants/common';
 
 const Container = styled.div`
   display: flex;
@@ -127,7 +128,8 @@ const OrderRow = ({ order }) => {
       <RowMain>
         <RowLeft>
           <p>Vendor Name <span>{order.vendorName}</span></p>
-          <p>Problem <span>{order.problem}</span></p>
+          <p>Vendor Contact <span>{order.vendorContact}</span></p>
+          <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
           <p>Car Type <span>{order.carType}</span></p>
           {(!!order.time && !!order.date) ? <div>
             <Text h5 className='mt-3' >Appointment</Text>

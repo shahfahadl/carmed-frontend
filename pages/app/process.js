@@ -116,6 +116,7 @@ const OrderRow = ({order , showMapForOrder}) =>{
     <RowMain>
       <RowLeft>
         <p>Vendor Name <span>{order.vendorName}</span></p>
+        <p>Vendor Contact <span>{order.vendorContact}</span></p>
         <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
         <p>Location <span>{order.location}</span> <MapButton onClick={() => showMapForOrder(order)} >Show Maps</MapButton></p>
         <p>Car Type <span>{order.carType}</span></p>

@@ -159,6 +159,7 @@ const OrderRow = ({order , showMapForOrder}) =>{
         </ProfileImageContainer>
         <p>Name <span>{order.userName}</span></p>
         <p>Location <span>{order.location}</span> <MapButton onClick={()=>showMapForOrder(order)} >Show maps</MapButton></p>
+        <p>Contact <span>{order.contact}</span></p>
         <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
         {(!!order.time && !!order.date) ? <div>
             <Text h5 className='mt-3' >Appointment</Text>
