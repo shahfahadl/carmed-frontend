@@ -141,6 +141,7 @@ const OrderRow = ({ order, loadingBid, visibilityHandler, showMapForOrder ,userI
         ...order ,
         vendorId: user.id,
         vendorName: user.name,
+        vendorContact: user.contact,
         price: order.bid,
         id: order.id,
       }
@@ -151,7 +152,7 @@ const OrderRow = ({ order, loadingBid, visibilityHandler, showMapForOrder ,userI
       console.log(error)
     }
   }
-
+//https://wa.me/+92number
   return (<OrderContainer>
     <RowMain>
       <RowLeft>
@@ -161,6 +162,7 @@ const OrderRow = ({ order, loadingBid, visibilityHandler, showMapForOrder ,userI
         <div>
           <p>Name <span>{order.userName}</span></p>
           <p>Location <span>{order.location}</span> <MapButton onClick={() => showMapForOrder(order)} >Show maps</MapButton></p>
+          <p>Contact <span>{order.contact}</span></p>
           <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
           {(!!order.time && !!order.date) ? <div>
               <Text h5 className='mt-4' >Appointment</Text>
@@ -219,7 +221,8 @@ export default function OrderNow() {
         vendorId: user.id,
         vendorName: user.name,
         bid: data.myBid,
-        vendorProfile: user.profile
+        vendorProfile: user.profile,
+        vendorContact: user.contact
       }
     }
 
@@ -252,7 +255,7 @@ export default function OrderNow() {
     setMapOpen(false);
     setCurrentLocation(null);
   }
-
+console.log('orders; ', orders)
   return (
     <Container>
       <AppTitle name="Available Orders" />

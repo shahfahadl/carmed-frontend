@@ -118,7 +118,7 @@ const Schema = yup.object().shape({
   name: yup
     .string()
     .required("name is required")
-    .matches(/^[A-Za-z]+$/, "Name must contain alphabets only")
+    .matches(/^[a-zA-Z\s]+$/, "Name must contain alphabets only")
     .max(50),
   cnic: yup
     .string()
@@ -225,10 +225,12 @@ export default function vendorSignup() {
   };
 
   const onCloseCalled = (latLng, name) => {
-    setOrigin({
-      name,
-      ...latLng,
-    });
+    if(name){
+      setOrigin({
+        name,
+        ...latLng,
+      });
+    }
     setMapOpen(false);
     setNoOriginError(false);
   };
@@ -283,7 +285,7 @@ export default function vendorSignup() {
                 hint={errors?.cnic?.message}
                 label={"CNIC"}
                 name="cnic"
-                style={{ width: "200px" }}
+                style={{ width: "215px" }}
                 placeholder={"CNIC: ----- / ------- / -"}
               />
             </ColumnGap>

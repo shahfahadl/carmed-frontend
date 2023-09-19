@@ -86,6 +86,7 @@ export const OrderNowPopup = ({ open, onClose }) => {
         location: destination.name,
         userId: user.id,
         userName: user.name,
+        contact: user.contact,
         userProfile: user.profile,
         latLng: {
           lat: destination.lat,
@@ -129,7 +130,7 @@ export const OrderNowPopup = ({ open, onClose }) => {
               hint={errors?.problem?.message}
               label={'Problem'}
               name="problem"
-              placeholder={'Engine'}
+              placeholder={'Select Problem'}
               options={skillsOption}
               required
             />
@@ -138,7 +139,7 @@ export const OrderNowPopup = ({ open, onClose }) => {
               hint={errors?.carType?.message}
               label={'Car Type'}
               name="carType"
-              placeholder={'Sedan'}
+              placeholder={'Select Car Type'}
               options={carTypeOptions}
               required
             />
