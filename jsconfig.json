@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@elements/*": [
+                "./elements/*"
+            ],
+            "@layouts/*": [
+                "./layouts/*"
+            ],
+            "@components/*": [
+                "./components/*"
+            ],
+            "@utility/*": [
+                "./utility/*"
+            ],
+            "@contexts/*": [
+                "./contexts/*"
+            ],
+            "@hooks/*": [
+                "./hooks/*"
+            ],
+            "@page-components/*": [
+                "./page-components/*"
+            ]
+        },
+    },
+    "include": [
+        "./**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        ".next",
+        "out"
+    ]
+}
