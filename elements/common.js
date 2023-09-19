@@ -5,117 +5,128 @@ import { CommonUtility } from "@utility/common";
 import { User } from "phosphor-react";
 
 const Hint = styled.p`
-    font-size: 0.625rem;
-    margin-left: 2px;
-    color: ${({theme}) => theme.colors.red};
-`
+  font-size: 0.625rem;
+  margin-left: 2px;
+  color: ${({ theme }) => theme.colors.red};
+`;
 
 export const FieldCheckbox = ({
-    control, name, defaultValue, required, error, label, hint, placeholder, ...rest
+  control,
+  name,
+  defaultValue,
+  required,
+  error,
+  label,
+  hint,
+  placeholder,
+  ...rest
 }) => {
-    return (
-        <Controller
-            control={control}
-            name={name}
-            defaultValue={defaultValue}
-            render={({
-                field: { onChange, value, ref },
-                fieldState: { error },
-            }) => (<>
-                {label && <h6>{label}</h6>}
-                <Checkbox
-                    color="success"
-                    inputRef={ref}
-                    margin={label ? 1 : 0}
-                    required={required}
-                    placeholder={placeholder || label}
-                    clearable
-                    value={value}
-                    onChange={onChange}
-                    status={error ? "error" : 'default'}
-                    {...rest}
-                />
-                {hint && <Hint>{hint}</Hint>}
-            </>
-            )}
-        />
-    )
-}
+  return (
+    <Controller
+      control={control}
+      name={name}
+      defaultValue={defaultValue}
+      render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+        <>
+          {label && <h6>{label}</h6>}
+          <Checkbox
+            color="success"
+            inputRef={ref}
+            margin={label ? 1 : 0}
+            required={required}
+            placeholder={placeholder || label}
+            clearable
+            value={value}
+            onChange={onChange}
+            status={error ? "error" : "default"}
+            {...rest}
+          />
+          {hint && <Hint>{hint}</Hint>}
+        </>
+      )}
+    />
+  );
+};
 
 const StyledRadio = styled(Radio)`
-    margin-top: 0 !important;
-`
+  margin-top: 0 !important;
+`;
 
 const TitleContainer = styled.div`
-    position: relative;
-    h2 {
-      font-weight: 400;
-    }
-    h2:nth-child(2) {
-      position: absolute;
-    }
-    div {
-      position: absolute;
-      width: 70%;
-      height: 10px;
-      background-color: ${({theme}) =>theme.colors.yellow};
-      border-radius: 10px;
-      right: -10%;
-      bottom: 10px;
-      opacity: 0.4;
-    }
-    margin: 20px;
-    margin-bottom: 30px;
-`
+  position: relative;
+  h2 {
+    font-weight: 400;
+  }
+  h2:nth-child(2) {
+    position: absolute;
+  }
+  div {
+    position: absolute;
+    width: 70%;
+    height: 10px;
+    background-color: ${({ theme }) => theme.colors.yellow};
+    border-radius: 10px;
+    right: -10%;
+    bottom: 10px;
+    opacity: 0.4;
+  }
+  margin: 20px;
+  margin-bottom: 30px;
+`;
 
 export const RadioFormField = ({
-    required, options, label, hint, control, name, defaultValue, ...rest
-  }) => {
-    return (
-      <Controller
-        control={control}
-        name={name}
-        defaultValue={defaultValue}
-        render={({
-            field: { onChange, value },
-            fieldState: { error },
-        }) => (<>
+  required,
+  options,
+  label,
+  hint,
+  control,
+  name,
+  defaultValue,
+  orientation = "vertical",
+  ...rest
+}) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      defaultValue={defaultValue}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <>
           <Radio.Group
-              onChange={(e) => onChange(e)}
-              value={value}
+            onChange={(e) => onChange(e)}
+            value={value}
+            orientation={orientation}
           >
-              {options.map((item) => (
-                <StyledRadio
-                  key={item.value}
-                  value={item.value}
-                  labelColor={error && "error"}
-                  size="sm"
-                  name={name}
-                  isDisabled={item.disabled}
-                  {...rest}
-                >
-                    {item.text}
-                </StyledRadio>
-              ))}
+            {options.map((item) => (
+              <StyledRadio
+                key={item.value}
+                value={item.value}
+                labelColor={error && "error"}
+                size="sm"
+                name={name}
+                isDisabled={item.disabled}
+                {...rest}
+              >
+                {item.text}
+              </StyledRadio>
+            ))}
           </Radio.Group>
-            {hint && <Hint>{hint}</Hint>}
+          {hint && <Hint>{hint}</Hint>}
         </>
-        )}
-      />
-    )
-  }
+      )}
+    />
+  );
+};
 
-export const AppTitle = ({name}) =>{
-    return (<TitleContainer>
-        <div></div>
-        <h2>
-          {name}
-        </h2>
-        <h2>
-          {name}
-        </h2>
-    </TitleContainer>)
-}
+export const AppTitle = ({ name }) => {
+  return (
+    <TitleContainer>
+      <div></div>
+      <h2>{name}</h2>
+      <h2>{name}</h2>
+    </TitleContainer>
+  );
+};
 
 const ProfileImageContainer = styled.div`
   width: 60px;
@@ -151,8 +162,8 @@ const ProfileImage = styled.img`
   border-radius: 50%;
 `;
 
-export const Profile = ({ profileImage, username, type}) => {
-  const url = profileImage
+export const Profile = ({ profileImage, username, type }) => {
+  const url = profileImage;
   return (
     <ProfileContainer>
       <ProfileImageContainer>
@@ -169,4 +180,4 @@ export const Profile = ({ profileImage, username, type}) => {
 export const CardsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-`
+`;
