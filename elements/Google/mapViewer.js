@@ -4,8 +4,31 @@ import GoogleMap from "@page-components/booking/map";
 import styled from "styled-components";
 
 const StyledModal = styled(Modal)`
-    min-width: 550px;
+    min-width: 540px;
     margin-left: -100px;
+    .nextui-modal-body{
+      padding: 20px !important;
+    }
+`
+
+const MapContainer = styled.div`
+  position: relative;
+  .google-button{
+    display: flex;
+    align-items: center;
+    background: rgb(26, 115, 232);
+    width: fit-content;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    margin-top: 10px;
+    img{
+      width: 20px;
+      margin-left: 5px;
+      height: 20px;
+      filter: invert(1);
+    }
+  }
 `
 
 export default function MapViewer({open, onClose, latLng, placeName}) {
@@ -43,10 +66,18 @@ export default function MapViewer({open, onClose, latLng, placeName}) {
                 </Text>
             </Modal.Header>
             <Modal.Body>
+              <MapContainer>
                 <GoogleMap
                     initialCords={latLng}
                     currentLatLng={currentLatLng}
                 />
+                {currentLatLng?.lat && currentLatLng?.lng && (
+                  <a className='google-button' href={`https://www.google.com/maps/dir/?api=1&destination=${currentLatLng?.lat},${currentLatLng?.lng}`} >
+                      directions
+                      <img src='/images/icons/direction.png' />
+                  </a>
+                )}
+              </MapContainer>
             </Modal.Body>
         </StyledModal>
     );

@@ -128,7 +128,12 @@ const OrderRow = ({ order }) => {
       <RowMain>
         <RowLeft>
           <p>Vendor Name <span>{order.vendorName}</span></p>
-          <p>Vendor Contact <span>{order.vendorContact}</span></p>
+          <p>Vendor Contact <span>{order.vendorContact}</span> 
+          {!!order.vendorContact && 
+              <a href={`https://wa.me/${order.vendorContact}`} >
+                <img className='ml-2' width={20} height={20} src='/images/icons/whatsapp.png' />
+              </a>
+            } </p>
           <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
           <p>Car Type <span>{order.carType}</span></p>
           {(!!order.time && !!order.date) ? <div>
