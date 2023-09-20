@@ -194,6 +194,9 @@ export const OrderNowPopup = ({ open, onClose }) => {
             />
           </>}
         </form>
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${destination.lat},${destination.lng}`} >
+            directions
+        </a>
       </Modal.Body>
       <Modal.Footer>
         <OutlinedButton color={theme.colors.green} size={15} onClick={() => handleSubmit(submit)()} loading={loading}>

@@ -127,6 +127,11 @@ const OrderRow = ({ order }) => {
           <div className='d-flex'>
             <span className='mr-2' >Contact</span>
             <b>{order.contact}</b>
+            {!!order.contact && 
+              <a href={`https://wa.me/${order.contact}`} >
+                <img className='ml-2' width={20} height={20} src='/images/icons/whatsapp.png' />
+              </a>
+            }
           </div>
           <div className='d-flex'>
             <span className='mr-2' >Problem</span>
