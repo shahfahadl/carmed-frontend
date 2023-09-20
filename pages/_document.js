@@ -33,6 +33,9 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <link rel="icon" href="/favicon.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+          <link rel="shortcut icon" sizes="196x196" href="/favicon.png" />
           {CssBaseline.flush()}
           <link rel="preconnect" href="https://fonts.googleapis.com"/>
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
