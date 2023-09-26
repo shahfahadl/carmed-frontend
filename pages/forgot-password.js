@@ -1,5 +1,4 @@
-import { SignIn } from "phosphor-react";
-import { InputFormField, PasswordFormField } from "@elements/input";
+import { InputFormField } from "@elements/input";
 import { SecondaryButton } from "@elements/button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,10 +7,6 @@ import styled from "styled-components";
 import UserService from "@utility/services/user";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { useAuth } from "@contexts/auth";
-import { RadioFormField } from "@elements/common";
-import VendorService from "@utility/services/vendor";
 import { SimpleNavbar } from "@page-components/landing/navbar";
 import { Link } from "@nextui-org/react";
 
@@ -26,19 +21,7 @@ const MainContainer = styled.div`
   z-index: 2;
   margin-top: 50px;
 `;
-const Slogan = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  font-weight: bold;
-  span {
-    display: flex;
-    font-size: 35px;
-  }
-`;
-const Yellow = styled.span`
-  color: ${({ theme }) => theme.colors.yellow};
-  min-width: max-content;
-`;
+
 const LoginHeading = styled.div`
   margin-top: 60px;
   width: max-content;
@@ -47,18 +30,7 @@ const LoginHeading = styled.div`
     font-weight: 700;
   }
 `;
-const AttemptSignin = styled.div`
-  display: flex;
-  color: white;
-  a {
-    color: ${({ theme }) => theme.colors.yellow};
-  }
-  span {
-    font-size: 16px;
-    display: flex;
-    font-weight: 600;
-  }
-`;
+
 const InputFields = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,21 +40,6 @@ const InputFields = styled.div`
     color: white;
   }
   .nextui-input-helper-text-container p {
-    color: white;
-  }
-`;
-
-const RadioSelector = styled(RadioFormField)`
-  width: max-content;
-  .nextui-radio-group-items {
-    justify-content: center !important;
-  }
-
-  .nextui-radio-point::after {
-    border-color: white !important;
-  }
-
-  .nextui-radio-container span {
     color: white;
   }
 `;
@@ -125,22 +82,10 @@ const Schema = yup.object().shape({
     .email("Must be type email")
     .max(50)
     .required("Email is required"),
-  password: yup
-    .string("Password is required")
-    .max(50)
-    .required("Password is required"),
-  role: yup
-    .string("Role is required")
-    .required("Role is required")
-    .default("user"),
 });
 
-export default function Login() {
+export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
-
-  const { login } = useAuth();
-
-  const { push } = useRouter();
 
   const {
     handleSubmit,
@@ -154,31 +99,20 @@ export default function Login() {
     setLoading(true);
     const payload = {
       email: data.email,
-      password: data.password,
     };
     try {
-      let res = {};
-      if (data.role === "vendor") {
-        res = await VendorService.login(payload);
+      const res = await UserService.resetPassword(payload);
+      if(res){
+        toast.success("Password resetted, kindly check your e-mail");
       } else {
-        res = await UserService.login(payload);
-      }
-      UserService.storeUser(res);
-      if (res.token) {
-        login();
-        push("/app");
+        toast.error("There was Issue resetting");
       }
     } catch (error) {
-      toast.error("Invalid credentials");
+      toast.error("There was Issue resetting");
     } finally {
       setLoading(false);
     }
   };
-
-  const radioOptions = [
-    { value: "user", text: "User" },
-    { value: "vendor", text: "Vendor" },
-  ];
 
   return (
     <>
@@ -186,25 +120,9 @@ export default function Login() {
       <BackgroundContainer>
         <div className="overlay" />
         <MainContainer>
-          <Slogan>
-            <Yellow>CarMed Vehicle Services</Yellow>
-            <span>&nbsp;Variety of Services at your&nbsp;</span>
-            <Yellow>Doorstep</Yellow>
-          </Slogan>
           <LoginHeading>
-            <h2>Log In</h2>
+            <h2>Forgot Password</h2>
           </LoginHeading>
-          <AttemptSignin>
-            <span>
-              Not a member?
-              <Yellow>
-                &nbsp;
-                <a href="/signup">
-                  Register Now
-                </a>
-              </Yellow>
-            </span>
-          </AttemptSignin>
 
           <form onSubmit={handleSubmit(submit)}>
             <InputFields>
@@ -216,34 +134,17 @@ export default function Login() {
                 style={{width: '220px'}}
                 placeholder={"John Doe"}
               />
-              <PasswordFormField
-                label={"Password"}
-                type={"password"}
-                placeholder={"Password"}
-                name="password"
-                hint={errors?.password?.message}
-                control={control}
-              />
             </InputFields>
-            <RadioSelector
-              name="role"
-              control={control}
-              options={radioOptions}
-              hint={errors?.role?.message}
-              defaultValue="user"
-              orientation="horizontal"
-            />
-            <Link href="/forgot-password" >
-              Forgot Password? click here
+            <Link className="forgot" href="/login" >
+              Back To Login
             </Link>
 
             <RegButton>
               <SecondaryButton
                 loading={loading}
                 type="submit"
-                icon={<SignIn size={20} weight="bold" color="black" />}
               >
-                Login
+                Reset Password
               </SecondaryButton>
             </RegButton>
           </form>

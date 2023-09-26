@@ -21,7 +21,7 @@ const LightColoredButton = styled(Button)`
 
 const LoadingRenderer = styled(Loading)`
     position: absolute;
-    left; 50%;
+    left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
 `
@@ -29,7 +29,7 @@ const LoadingRenderer = styled(Loading)`
 const ButtonContainer = styled.div`
     display: flex;
     align-items: center;
-    jusitfy-content: center;
+    justify-content: center;
     ${({hide}) => hide === 1? `
         opacity: 0;
         pointer-events: none;

@@ -51,6 +51,12 @@ class User extends CRUDService {
 
   rateVendor = (data) => 
     BaseService.post(APIPath.rateVendor, data)
+
+  generateOTP = (data) => 
+    BaseService.post(APIPath.generateOTP, data)
+
+  resetPassword = (data) => 
+    BaseService.post(APIPath.resetPassword, data)
   
 
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { InputFormField, PasswordFormField, InputImage } from "@elements/input";
 import { DropdownFormField } from "@elements/dropdown";
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import UploadMediaService from "@utility/services/upload-service";
 import axios from "axios";
 import { SimpleNavbar } from "@page-components/landing/navbar";
+import { toast } from "react-hot-toast";
 
 const MainContainer = styled.div`
   width: 95%;
@@ -103,8 +104,7 @@ const Password = styled.div`
   column-gap: 20px;
 `;
 const RegisterButton = styled(SecondaryButton)`
-  margin-top: 60px;
-  color: black;
+  color: black !important;
   font-weight: bold;
 `;
 
@@ -153,7 +153,7 @@ const Schema = yup.object().shape({
       (value) => !isNaN(Number(value))
     ),
   email: yup
-    .string()
+    .string().trim()
     .email("must be an email")
     .required("email is required")
     .max(50),
@@ -162,6 +162,7 @@ const Schema = yup.object().shape({
     .required("password is required")
     .max(50),
   gender: yup.string("Gender is required").required("Gender is required"),
+  otp: yup.string("OTP is required").required("OTP is required").trim(),
   image: yup.mixed().test("fileType", "Unsupported File Format", (value) => {
     if (value) {
       return ["image/jpeg", "image/png"].includes(value.type);
@@ -173,13 +174,19 @@ const Schema = yup.object().shape({
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const [submitCount, setSubmitCount] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [onceClicked, setOnceClicked] = useState(false)
 
   const {
     handleSubmit,
     control,
+    getFieldState,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(Schema),
+    mode: 'all'
   });
 
   const { push } = useRouter();
@@ -223,6 +230,40 @@ export default function SignUp() {
       setLoading(false);
     }
   };
+
+  const {error: emailError} = getFieldState('email');
+  const email = watch('email');
+  
+  const intervalRef = useRef();
+  
+  const showOTP = email && !emailError;
+
+  const generateOTP = async () => {
+    setOnceClicked(true);
+    try {
+      await UserService.generateOTP({email})
+      setSubmitCount(prev => prev + 1);
+      setSeconds(60);
+    } catch (error) {
+      toast.error("There was error generating OTP")
+    }
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    intervalRef.current = timer;
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [submitCount]);
+
+  useEffect(() => {
+    if (seconds < 1) {
+      clearInterval(intervalRef.current);
+    }
+  }, [seconds]);
 
   return (
     <>
@@ -288,6 +329,19 @@ export default function SignUp() {
                 </Email>
                 <InputImage className="ml-5" control={control} name="image" />
               </div>
+              {showOTP && <RegisterButton disabled={seconds !== 0} onClick={() => generateOTP()} >{seconds > 0? `Retry in ${seconds}s` : "Send OTP"}</RegisterButton> }
+              {onceClicked && 
+                <div className="d-flex align-items-center mt-2 ">
+                    <InputFormField
+                      control={control}
+                      hint={errors?.email?.message}
+                      label={"OTP"}
+                      name="otp"
+                      style={{ width: "215px" }}
+                      placeholder={"someone@gmail.com"}
+                    />
+                </div>
+              }
               <Password className="pt-2">
                 <PasswordFormField
                   label={"Password"}
@@ -315,7 +369,7 @@ export default function SignUp() {
                 />
               </Password>
             </EmailPassword>
-            <RegisterButton loading={loading} type="submit">
+            <RegisterButton className='mt-4' loading={loading} type="submit">
               <SignIn size={20} weight="bold" color="black" />
               &nbsp;CreateAccount
             </RegisterButton>

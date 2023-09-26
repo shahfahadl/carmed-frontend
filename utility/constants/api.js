@@ -13,6 +13,8 @@ export const APIPath = {
     placeBid:'vendor/place-bid',
     acceptRequest:'user/accept-request',
     rateVendor:'user/give-rating',
+    generateOTP:'user/generate-otp',
+    resetPassword:'user/reset-password',
     images: 'images',
     getSignedUrl: 'aws/get-signed-url',
     aws: 'aws',
