@@ -135,3 +135,33 @@ export const orderVendorProcess = (status = 'process') => {
 }
 
 export const orderVendorCompleted = () => orderVendorProcess("completed");
+
+export const adminAllOrders = () => {
+  const { user } = useAuth();
+    const [collectionData, setCollectionData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!user || !user.id) {
+            return;
+        }
+
+        const orderQuery = query(collection(firestore, 'orders'));
+
+        const unsubscribe = onSnapshot(orderQuery, (querySnapshot) => {
+            let data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setCollectionData(data);
+            setLoading(false);
+        }, (error) => {
+            console.error(error);
+            setError(error);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [user, firestore]);
+
+    return { data: collectionData, loading, error };
+}

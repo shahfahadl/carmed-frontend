@@ -22,6 +22,7 @@ import {
   skillsOption,
 } from "@utility/constants/common";
 import { DropdownFormField } from "@elements/dropdown";
+import { useAuth } from "@contexts/auth";
 
 const Container = styled.div`
   display: flex;
@@ -125,6 +126,8 @@ const StyledMuteButton = styled(MuteButton)`
 
 const Request = ({ request, id }) => {
   const url = request.vendorProfile;
+  const { user } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const ratingValue = (() => {
     if (request.ratings.length === 0) return 0;
@@ -145,6 +148,7 @@ const Request = ({ request, id }) => {
         vendorId: request.vendorId,
         vendorName: request.vendorName,
         bid: request.bid,
+        vendorContact: request.vendorContact,
         id: id,
         vendorProfile: request.vendorProfile,
       };
@@ -169,7 +173,11 @@ const Request = ({ request, id }) => {
         Name <LowerOpacity>{request.vendorName}</LowerOpacity>
       </h5>
       <h5>
-        Contact <LowerOpacity>Not available</LowerOpacity>
+        Contact <LowerOpacity>{request.vendorContact}</LowerOpacity> {!!request.vendorContact && 
+              <a href={`https://wa.me/${request.vendorContact}`} >
+                <img className='ml-2' width={20} height={20} src='/images/icons/whatsapp.png' />
+              </a>
+            }
       </h5>
       <h5>
         Ratings &nbsp;{" "}

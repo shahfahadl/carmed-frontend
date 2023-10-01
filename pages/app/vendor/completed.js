@@ -6,6 +6,7 @@ import { Loading, Text } from '@nextui-org/react';
 import { User } from 'phosphor-react';
 import { CommonUtility } from '@utility/common';
 import { RatingStar } from '@elements/input';
+import { skillsMap } from '@utility/constants/common';
 
 const Container = styled.div`
   display: flex;
@@ -96,13 +97,20 @@ const ImageContainer = styled.div`
   margin-left: 10px;
 `
 
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
 const OrderRow = ({ order }) => {
   return (
     <OrderContainer>
       <RowMain>
         <RowLeft>
           <ImageContainer>
-            {order.image ? <img /> : <User />}
+            {order.userProfile ? <ProfileImage src={order.userProfile} /> : <User />}
           </ImageContainer>
           <div className='d-flex'>
             <span className='mr-2' >Order Id</span>
@@ -117,8 +125,17 @@ const OrderRow = ({ order }) => {
             <b>{order.location}</b>
           </div>
           <div className='d-flex'>
+            <span className='mr-2' >Contact</span>
+            <b>{order.contact}</b>
+            {!!order.contact && 
+              <a href={`https://wa.me/${order.contact}`} >
+                <img className='ml-2' width={20} height={20} src='/images/icons/whatsapp.png' />
+              </a>
+            }
+          </div>
+          <div className='d-flex'>
             <span className='mr-2' >Problem</span>
-            <b>{order.problem}</b>
+            <b>{skillsMap[order.problem] || order.problem}</b>
           </div>
           {(!!order.time && !!order.date) ? <div>
             <Text h5 className='mt-3' >Appointment</Text>

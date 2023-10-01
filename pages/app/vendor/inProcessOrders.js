@@ -159,6 +159,11 @@ const OrderRow = ({order , showMapForOrder}) =>{
         </ProfileImageContainer>
         <p>Name <span>{order.userName}</span></p>
         <p>Location <span>{order.location}</span> <MapButton onClick={()=>showMapForOrder(order)} >Show maps</MapButton></p>
+        <p>Contact <span>{order.contact}</span> {!!order.contact && 
+              <a href={`https://wa.me/${order.contact}`} >
+                <img className='ml-2' width={20} height={20} src='/images/icons/whatsapp.png' />
+              </a>
+            }</p>
         <p>Problem <span>{skillsMap[order.problem] || order.problem}</span></p>
         {(!!order.time && !!order.date) ? <div>
             <Text h5 className='mt-3' >Appointment</Text>

@@ -78,3 +78,17 @@ export const skillsOption = [
     text: 'Battery'
   },
 ]
+
+export const statusColor = {
+  canceled: '#F13030',
+  process: '#0390fc',
+  completed: '#4CBB17',
+  pending: '#FFC30B'
+}
+
+export const statusMap = {
+  canceled: 'Cancelled',
+  process: 'In process',
+  completed: 'Completed',
+  pending: 'Pending'
+}

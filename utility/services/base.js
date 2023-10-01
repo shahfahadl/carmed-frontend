@@ -16,6 +16,12 @@ const onError = async (error) => {
       window.location.href = '/login';
       return Promise.reject(error);
     }
+    console.log('err: ', error)
+    if (error.response.status === 405) {
+      window.localStorage.clear();
+      window.location.href = '/blocked';
+      return Promise.reject(error);
+    }
   }
 
   return Promise.reject({
@@ -25,12 +31,13 @@ const onError = async (error) => {
   });
 }
 
-const request = async (options, isSecure) => {
+const request = async (options, isSecure = true) => {
   const headers = {};
 
   if (isSecure) {
-    const token = BrowserUtility.getObj(commonConstants.uniqueUserName);
-    headers.Authorization = token;
+    const user = BrowserUtility.getObj(commonConstants.uniqueUserName);
+    headers.authorization = user?.token;
+    headers.type = user?.type;
   }
 
   const client = axios.create({
@@ -44,24 +51,24 @@ const request = async (options, isSecure) => {
 }
 
 export class BaseService {
-  static get = (url, isSecure = false) => request({
+  static get = (url, isSecure = true) => request({
     url,
     method: 'GET',
   }, isSecure)
 
-  static post = (url, data, isSecure = false) => request({
+  static post = (url, data, isSecure = true) => request({
     url,
     method: 'POST',
     data,
   }, isSecure)
 
-  static put = (url, data, isSecure = false) => request({
+  static put = (url, data, isSecure = true) => request({
     url,
     method: 'PUT',
     data,
   }, isSecure)
 
-  static remove = (url, isSecure = false) => request({
+  static remove = (url, isSecure = true) => request({
     url,
     method: 'DELETE',
   }, isSecure)

@@ -7,6 +7,11 @@ import { useRouter } from 'next/router'
 
 const AuthContext = createContext();
 
+/*
+shahfahadiffi+admin@gmail.com
+admin1234
+*/
+
 export function AuthProvider({ children }) {
     const {
         replace, pathname, events
@@ -15,15 +20,17 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [isVendor, setIsVendor] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(null);
 
     const setData = (preUser = null) => {
         if (window.top === window.self) {
             const authenticated = UserService.isAuthenticated();
             setIsAuthenticated(authenticated);
             if (authenticated) {
-                const user = UserService.getUser()
+                const user = UserService.getUser();
+                setIsAdmin(user?.type === 'admin')
                 setUser(user);
-                setIsVendor(user.type === 'vendor')
+                setIsVendor(user?.type === 'vendor')
             }
         }
     }
@@ -82,7 +89,8 @@ export function AuthProvider({ children }) {
             isAuthenticated,
             login,
             logout,
-            isVendor
+            isVendor,
+            isAdmin
         }}
         >
             {children}
