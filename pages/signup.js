@@ -127,7 +127,7 @@ const BackgroundContainer = styled.div`
 const Schema = yup.object().shape({
   name: yup.string("Name is required")
     .required("name is required")
-    .matches(/^[A-Za-z]+$/, "Name must contain alphabets only")
+    .matches(/^[A-Za-z ]+$/, "Name must contain alphabets only")
     .max(50),
   cnic: yup.string()
     .typeError("CNIC must be valid")
