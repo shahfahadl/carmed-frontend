@@ -164,9 +164,14 @@ export default function Login() {
         res = await UserService.login(payload);
       }
       UserService.storeUser(res);
+      console.log('res: ', res)
       if (res.token) {
         login();
-        push("/app");
+        if(res.type === 'admin'){
+          push("/app/admin");
+        } else {
+          push("/app");
+        }
       }
     } catch (error) {
       toast.error("Invalid credentials");

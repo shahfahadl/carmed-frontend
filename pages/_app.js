@@ -24,6 +24,9 @@ const GlobalStyle = createGlobalStyle`
   .w-100{
     width: 100%;
   }
+  .cursor-pointer{
+    cursor: pointer;
+  }
 `
 
 const nextUITheme = createTheme({

@@ -242,6 +242,7 @@ export default function SignUp() {
     setOnceClicked(true);
     try {
       await UserService.generateOTP({email})
+      console.log('her')
       setSubmitCount(prev => prev + 1);
       setSeconds(60);
     } catch (error) {
@@ -334,11 +335,11 @@ export default function SignUp() {
                 <div className="d-flex align-items-center mt-2 ">
                     <InputFormField
                       control={control}
-                      hint={errors?.email?.message}
+                      hint={errors?.otp?.message}
                       label={"OTP"}
                       name="otp"
                       style={{ width: "215px" }}
-                      placeholder={"someone@gmail.com"}
+                      placeholder={"XXXXXX"}
                     />
                 </div>
               }

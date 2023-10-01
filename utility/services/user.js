@@ -5,7 +5,7 @@ import { CRUDService } from './crud';
 
 class User extends CRUDService {
   constructor() {
-    super(APIPath.user);
+    super(APIPath.user, true);
   }
 
   getToken = () => {
@@ -52,11 +52,23 @@ class User extends CRUDService {
   rateVendor = (data) => 
     BaseService.post(APIPath.rateVendor, data)
 
+  updateUser = (data) => 
+    BaseService.put(APIPath.updateUser, data)
+
   generateOTP = (data) => 
     BaseService.post(APIPath.generateOTP, data)
 
   resetPassword = (data) => 
     BaseService.post(APIPath.resetPassword, data)
+
+  getAllOrders = (data) => 
+    BaseService.get(APIPath.getAllOrders, data)
+
+  getAllUsers = (data) => 
+    BaseService.get(APIPath.getAllUsers, data)
+
+  getAllVendors = (data) => 
+    BaseService.get(APIPath.getAllVendors, data)
   
 
 }

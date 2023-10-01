@@ -1,6 +1,6 @@
 import { SecondaryButton } from "@elements/button";
 import { MapPin, SignIn } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import VendorService from "@utility/services/vendor";
 import { useAuth } from "@contexts/auth";
@@ -15,6 +15,8 @@ import { DropdownFormField } from "@elements/dropdown";
 import UploadMediaService from "@utility/services/upload-service";
 import axios from "axios";
 import { SimpleNavbar } from "@page-components/landing/navbar";
+import { toast } from "react-hot-toast";
+import UserService from "@utility/services/user";
 
 const Main = styled.div`
   min-height: 100vh;
@@ -144,6 +146,7 @@ const Schema = yup.object().shape({
     .max(50),
   password: yup.string().required("password is required").max(50),
   gender: yup.string().required("Gender is required"),
+  otp: yup.string("OTP is required").required("OTP is required"),
   skill: yup.string().required("skill is required"),
   image: yup
     .mixed()
@@ -156,10 +159,17 @@ const Schema = yup.object().shape({
     }),
 });
 
+const RegisterButton = styled(SecondaryButton)`
+  color: black !important;
+  font-weight: bold;
+`;
+
 export default function vendorSignup() {
   const [loading, setLoading] = useState(false);
   const [noOriginError, setNoOriginError] = useState(false);
-
+  const [submitCount, setSubmitCount] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [onceClicked, setOnceClicked] = useState(false)
   const { login } = useAuth();
 
   const [mapOpen, setMapOpen] = useState(false);
@@ -169,8 +179,11 @@ export default function vendorSignup() {
     handleSubmit,
     control,
     formState: { errors },
+    getFieldState,
+    watch
   } = useForm({
     resolver: yupResolver(Schema),
+    mode: "all"
   });
 
   const { push } = useRouter();
@@ -235,6 +248,40 @@ export default function vendorSignup() {
     setNoOriginError(false);
   };
 
+  const {error: emailError} = getFieldState('email');
+  const email = watch('email');
+  
+  const intervalRef = useRef();
+  
+  const showOTP = email && !emailError;
+
+  const generateOTP = async () => {
+    setOnceClicked(true);
+    try {
+      await UserService.generateOTP({email})
+      setSubmitCount(prev => prev + 1);
+      setSeconds(60);
+    } catch (error) {
+      toast.error("There was error generating OTP")
+    }
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    intervalRef.current = timer;
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [submitCount]);
+
+  useEffect(() => {
+    if (seconds < 1) {
+      clearInterval(intervalRef.current);
+    }
+  }, [seconds]);
+
   return (
     <>
       <SimpleNavbar />
@@ -289,6 +336,19 @@ export default function vendorSignup() {
                 placeholder={"CNIC: ----- / ------- / -"}
               />
             </ColumnGap>
+            {showOTP && <RegisterButton className='mb-2' disabled={seconds !== 0} onClick={() => generateOTP()} >{seconds > 0? `Retry in ${seconds}s` : "Send OTP"}</RegisterButton> }
+              {onceClicked && 
+                <div className="d-flex align-items-center mt-2 ">
+                    <InputFormField
+                      control={control}
+                      hint={errors?.otp?.message}
+                      label={"OTP"}
+                      name="otp"
+                      style={{ width: "215px" }}
+                      placeholder={"XXXXXX"}
+                    />
+                </div>
+              }
             <ColumnGap>
               <InputFormField
                 control={control}

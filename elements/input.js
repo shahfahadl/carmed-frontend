@@ -77,7 +77,7 @@ const ErrorMessage = styled.div`
   height: min-content;
   opacity: ${({ noImageError }) => noImageError? "1":"0"};
   transition: 0.3s ease-in-out;
-  transform: scale( ${({ noImageError }) => noImageError? "1":"0"} )
+  transform: scale( ${({ noImageError }) => noImageError? "1":"0"} );
 `
 
 export const InputImageSimple = ({
