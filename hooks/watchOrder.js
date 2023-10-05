@@ -79,7 +79,7 @@ export const orderVendorPending = () => {
             return;
         }
 
-        const orderQuery = query(collection(firestore, 'orders'), where("status", "==", "pending"), where("location","==",user.city));
+        const orderQuery = query(collection(firestore, 'orders'), where("status", "==", "pending"), where("problem", "==", user.skill), where("location","==",user.city));
 
         const unsubscribe = onSnapshot(orderQuery, (querySnapshot) => {
             let data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
