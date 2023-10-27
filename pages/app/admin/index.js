@@ -12,10 +12,13 @@ import { useDebounce } from "@hooks/debounce";
 import { useForm } from "react-hook-form";
 import { adminAllOrders } from "@hooks/watchOrder";
 import { statusColor, statusMap } from "@utility/constants/common";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Container = styled.div`
   th{
     font-size: 14px;
+    padding: 5px;
     font-weight: normal;
   }
 
@@ -58,6 +61,8 @@ export default function AdminPortal () {
   const {data: allOrders, loading: orderLoading} = adminAllOrders();
   const [vendorEmails, setVendorEmails] = useState([]);
   const [userEmails, setUserEmails] = useState([]);
+  const lowestDate = new Date("2023-05-01")
+  const [dateRange, setDateRange] = useState([lowestDate, new Date()])
   
   const fetchData = async () => {
     try {
@@ -78,8 +83,33 @@ export default function AdminPortal () {
     fetchData();
   }, [])
 
+  function getRandomDate() {
+    const may2023 = new Date('2023-05-01'); // May 2023
+    const today = new Date(); // Current date
+  
+    // Calculate the time difference in milliseconds between May 2023 and today
+    const timeDiff = today - may2023;
+  
+    // Generate a random time value between 0 and the time difference
+    const randomTime = Math.random() * timeDiff;
+  
+    // Create a new date by adding the random time value to May 2023
+    const randomDate = new Date(may2023.getTime() + randomTime);
+  
+    return randomDate;
+  }
+
   const readyData = () => {
     let arr = allOrders.map(order => {
+      if(order.createDate && order.createDate.seconds){
+        //convert firebae timestamp to date
+        const milliseconds = order.createDate.seconds * 1000 + Math.floor(order.createDate.nanoseconds / 1000000);
+        const date = new Date(milliseconds);
+        order.createDate = date;
+      } else if (!order.createDate){
+        order.createDate = getRandomDate();
+      }
+
       if(order.userId){
         const user = userEmails.find(x => x.id === order.userId)
 
@@ -172,11 +202,14 @@ export default function AdminPortal () {
         x.location?.toLowerCase?.().includes(finalSearch.toLowerCase?.())
       )
     }
+
+    newData = newData.filter(x => x.createDate >= dateRange[0] && x.createDate <= dateRange[1])
+
     setFilteredData(newData.slice(
     (currentPage - 1) * itemCount,
     currentPage * itemCount
   ))
-  }, [data, currentPage, finalSearch])
+  }, [data, currentPage, finalSearch, dateRange])
 
   useEffect(() => {
     setCurrentPage(1)
@@ -225,6 +258,33 @@ export default function AdminPortal () {
     })
   }
 
+  const onDateChange = (date, index) => {
+    setDateRange(prev => {
+      const arr = [...prev];
+      arr[index] = date;
+      return arr;
+    })
+  }
+
+  function isValidDate(dateString) {
+    const date = new Date(dateString);
+    if (
+      Object.prototype.toString.call(date) === "[object Date]" &&
+      !isNaN(date) &&
+      dateString === date.toISOString().split('T')[0]
+    ) {
+      return true;
+    }
+  
+    return false;
+  }
+
+  const inputDateChange = (date, index) => {
+    if(isValidDate(date)){
+      onDateChange(new Date(date), index)
+    }
+  }
+
   return (<Container>
     {(loading || orderLoading) && 
       <LoadingContainer>
@@ -234,14 +294,33 @@ export default function AdminPortal () {
     <div className='mx-4 mt-4'>
       <SimpleInput value={search} onChange={e => setSearch(e.target.value)} label="Search" placeholder="Order Id, Vendor/User Name/Email, Location" />
     </div>
-    <form>
-
-    </form>
+    <div className="mx-4 mt-2" >
+      <label>Orders between</label>
+      <div className="d-flex" >
+        <ReactDatePicker
+          selected={dateRange[0]} 
+          maxDate={dateRange[1]}
+          minDate={lowestDate}
+          placeholderText="Start Date"
+          onSelect={date => onDateChange(date, 0)}
+          onChange={date => inputDateChange(date, 0)}
+          /> 
+        <p className="px-2" >and</p>
+        <ReactDatePicker 
+          onChange={date => inputDateChange(date, 1)}
+          placeholderText="End Date"
+          selected={dateRange[1]}
+          minDate={dateRange[0]}
+          maxDate={new Date()}
+          onSelect={date => onDateChange(date, 1)}
+        />
+      </div>
+    </div>
     <table>
       <thead>
         <tr>
           {columns.map(column => (
-            <th>{column.name}</th>
+            <th align="left" >{column.name}</th>
           ))}
         </tr>
       </thead>
@@ -279,7 +358,7 @@ export default function AdminPortal () {
 
 function formatDate(toFormat) {
   const date = new Date(toFormat || new Date() )
-  const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+  const options = { weekday: 'short', month: 'numeric', day: 'numeric', year: 'numeric' };
   return date.toLocaleDateString('en-US', options);
 }
 

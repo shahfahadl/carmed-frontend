@@ -43,6 +43,8 @@ export function AuthProvider({ children }) {
                 } else if (url.indexOf('/login') > -1 && isAuthenticated){
                     if(isVendor){
                         replace('/app/vendor');
+                    } else if(isAdmin){
+                      replace('/app/admin')
                     } else {
                         replace('/app')
                     }
@@ -51,6 +53,8 @@ export function AuthProvider({ children }) {
                         if(url.indexOf('/vendor') < 0 && url.indexOf('/app') > -1){
                             replace('/app/vendor')
                         }
+                    } else if(isAdmin && url.indexOf('/admin') < 0 && url.indexOf('/app') > -1 ){
+                      replace('/app/admin')
                     } else if(url.indexOf('/vendor') > -1 && url.indexOf('/app') > -1){
                         replace('/app')
                     }
