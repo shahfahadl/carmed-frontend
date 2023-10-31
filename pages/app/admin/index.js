@@ -9,7 +9,6 @@ import MapViewer from "@elements/Google/mapViewer";
 import { PrimaryButton, SecondaryButton } from "@elements/button";
 import { SimpleInput } from "@elements/input";
 import { useDebounce } from "@hooks/debounce";
-import { useForm } from "react-hook-form";
 import { adminAllOrders } from "@hooks/watchOrder";
 import { statusColor, statusMap } from "@utility/constants/common";
 import ReactDatePicker from "react-datepicker";
@@ -178,11 +177,7 @@ export default function AdminPortal () {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState('10');
-  const [showExtra, setShowExtra] = useState(false);
-
-  const {} = useForm()
-
-  const pageCount = Math.ceil(data.length / itemsPerPage);
+  const [pageCount, setPageCount] = useState(0);
 
   const handlePageChange = (selected) => {
     setCurrentPage(selected);
@@ -204,6 +199,8 @@ export default function AdminPortal () {
     }
 
     newData = newData.filter(x => x.createDate >= dateRange[0] && x.createDate <= dateRange[1])
+
+    setPageCount(Math.ceil(newData.length / itemsPerPage))
 
     setFilteredData(newData.slice(
     (currentPage - 1) * itemCount,
